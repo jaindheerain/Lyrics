@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -25,6 +26,7 @@ public class MusicReceiver extends BroadcastReceiver {
     Context c;
     String trackId;
     String track;
+    //communicator hey;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -37,11 +39,13 @@ public class MusicReceiver extends BroadcastReceiver {
 
         track = intent.getStringExtra("track");
         Log.d("Music", artist + ":" + album + ":" + track);
-//        getTrackId(track, artist, album);
-//        getLyrics();
+       getTrackId(track, artist, album);
+/*
+       getTrackId("sugar","Maroon5"," ");
+*/
 
-        getId();
-//        getLyrics2();
+        //getId();
+      //getLyrics2();
 
     }
 
@@ -72,24 +76,38 @@ public class MusicReceiver extends BroadcastReceiver {
                     trackIdArrayLists.add(details.getMessage().getBody().getTrack_list().get(i).getTrack().getTrack_id());
                     Log.d(TAG, "onResponse: " + trackIdArrayLists.size());
                 }
-//                } else {
+                getLyrics();
+//
+//     } else {
 //                }
+
             }
-        });
+
+        }
+
+        );
+
         return trackIdArrayLists;
     }
 
     public void getLyrics() {
 //        Log.d(TAG, "getLyrics: "+"https://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey=0e3945b8ba5f77f377843ec4b2539360"+trackIdArrayList.get(0));
         Log.d(TAG, "getLyrics: " + trackIdArrayList.size());
-        StringBuilder url = new StringBuilder();
-        url.append("https://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey=0e3945b8ba5f77f377843ec4b2539360");
+        String url;
+        url = "https://api.musixmatch.com/ws/1.1/track.lyrics.get?apikey=0e3945b8ba5f77f377843ec4b2539360";
         if (trackIdArrayList.size() != 0) {
             Log.d(TAG, "getLyrics: " + trackIdArrayList.size());
-            url.append("&track_id=" + trackIdArrayList.get(0));
+            url = url + "&track_id=" + "84380872";
             Log.d(TAG, "getLyrics: " + url.toString());
+        } else{
+            Toast.makeText(c, "Hey couldnt find your song Sorry :P", Toast.LENGTH_SHORT).show();
         }
-        Log.d(TAG, "getLyrics: " + trackIdArrayList.size());
+
+
+        /*Log.d(TAG, "getLyrics: " + trackIdArrayList.size());
+        url=url+"&track_id=" +(trackIdArrayList.get(0)).toString();
+        Log.d(TAG, "getLyrics: " + url.toString());
+        Log.d(TAG, "getLyrics: " + trackIdArrayList.size());*/
         Request request1 = new Request.Builder()
                 .url(url.toString())
                 .build();
@@ -109,6 +127,8 @@ public class MusicReceiver extends BroadcastReceiver {
                     Log.d("TAG", "onResponse: " + lyrics);
                     Intent displayIntent = new Intent(c, DisplayLyricsActivity.class);
                     displayIntent.putExtra("lyrics", lyrics);
+                    displayIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                     c.startActivity(displayIntent);
                 }
             }
@@ -187,6 +207,7 @@ public class MusicReceiver extends BroadcastReceiver {
                 lyrics=lyricsDetails.getMessageLyrics().getBodyLyrics().getLyrics().getLyrics_body();
                 Log.d(TAG, "onResponse: "+lyrics);
                 Intent displayIntent=new Intent(c,DisplayLyricsActivity.class);
+                displayIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 displayIntent.putExtra("lyrics",lyrics);
                 c.startActivity(displayIntent);
             }

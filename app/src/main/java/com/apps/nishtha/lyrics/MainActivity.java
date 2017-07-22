@@ -22,7 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     EditText nameEt;
     Button btnSearch;
@@ -141,4 +141,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }
